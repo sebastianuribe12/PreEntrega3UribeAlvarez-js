@@ -1,15 +1,32 @@
-const btnAumentar =document.querySelector('.btn-info')
-const btnDism =document.querySelector('.btn-danger')
-const span =document.getElementById('span')
-let contador =0
-btnAumentar.addEventListener('click', () =>{
-    console.log('le diste click aumentar')
-    contador++
-    span.textContent = contador
-})
+const items =document.getElementById('items')
+const templateCard = document.getElementById('template-card').content
+const fragment = document.createDocumentFragment()
 
-btnDism.addEventListener('click', () =>{
-    console.log('le diste click aumentar')
-    contador =contador-1
-    span.textContent = contador
+document.addEventListener('DOMContentLoaded', () =>{
+    fetchData()
 })
+const fetchData = async () => {
+    try{
+        const res = await fetch('api.json')
+        const data = await res.json()
+        //console.log(data)  
+        pintarCards(data)     
+    } catch (error){
+        console.log(error)
+    }
+    
+}
+
+const pintarCards = data => {
+    console.log(data)
+    data.forEach(producto =>{
+        templateCard.querySelector('h5').textContent = producto.title
+        templateCard.querySelector('p').textContent = producto.precio
+        templateCard.querySelector('img').setAttribute("src", producto.thumbnailUrl)
+        templateCard.querySelector('.btn-dark').dataset.id = producto.id
+
+        const clone = templateCard.cloneNode(true)
+        fragment.appendChild(clone)
+    })
+    items.appendChild(fragment)
+}
